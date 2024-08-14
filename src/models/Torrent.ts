@@ -1,51 +1,51 @@
 import { DataTypes, Model } from 'sequelize'
 import { sequelize } from './index'
-import { Torrent } from './Torrent'
+import { User } from './User'
 
-class User extends Model {
+class Torrent extends Model {
     public id!: number
-    public name!: string
-    public email!: string
-    public password!: string
-    public token!: string
-    public permitted!: boolean
-    public Torrents!: Torrent[]
+    public title!: string
+    public magnet!: string
+    public size!: string
+    public seeders!: number
+    public leechers!: number
+    public User!: User
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
 }
 
-User.init(
+Torrent.init(
     {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        name: {
+        title: {
             type: new DataTypes.STRING(128),
             allowNull: false,
         },
-        email: {
+        magnet: {
             type: new DataTypes.STRING(128),
             allowNull: false,
         },
-        password: {
+        size: {
             type: new DataTypes.STRING(128),
             allowNull: false,
         },
-        token: {
-            type: new DataTypes.STRING(128),
-            allowNull: true,
+        seeders: {
+            type: new DataTypes.INTEGER(),
+            allowNull: false,
         },
-        permitted: {
-            type: new DataTypes.BOOLEAN(),
+        leechers: {
+            type: new DataTypes.INTEGER(),
             allowNull: false,
         },
     },
     {
-        tableName: 'users',
+        tableName: 'torrents',
         sequelize,
     }
 )
 
-export { User }
+export { Torrent }
