@@ -1,29 +1,30 @@
 import { Request, Response } from 'express'
 import { User } from '../models/User'
-import { hashPassword, generateToken, verifyToken } from '../utils/auth'
-import jwt from 'jsonwebtoken'
+import { hashPassword, genToken } from '../utils/auth'
+import { AuthRequest } from '../utils/interfaces'
 
-// GET /users is not implemented for now
-// async function getUsers(req: Request, res: Response) {
-//     const token = req.headers['authorization'] || req.headers['Authorization']
+async function getUsers(req: Request, res: Response) {
+    const users = await User.findAll({ attributes: { exclude: ['password', 'token'] } })
+    res.status(200).json(users)
+}
 
-//     if (!token) {
-//         return res.status(401).json({ message: 'Unauthorized' })
-//     }
+async function getUser(req: Request, res: Response) {
+    let { id } = req.params
 
-//     const decoded = verifyToken(token as string)
+    const user = await User.findOne({
+        where: { id: id },
+        attributes: { exclude: ['password', 'token'] },
+    })
+    res.status(200).json(user)
+}
 
-//     if (decoded === 'invalid token') {
-//         return res.status(401).json({ message: 'Unauthorized' })
-//     }
-
-//     console.log(decoded)
-
-//     const users = await User.findAll()
-//     res.status(200).json(users)
-// }
-
-async function getUser(req: Request, res: Response) {}
+async function getSelf(req: AuthRequest, res: Response) {
+    const user = await User.findOne({
+        where: { email: req.user!.email },
+        attributes: { exclude: ['password', 'token'] },
+    })
+    res.status(200).json(user)
+}
 
 async function createUser(req: Request, res: Response) {
     const { name, email, password } = req.body
@@ -33,10 +34,22 @@ async function createUser(req: Request, res: Response) {
         name,
         email,
         password: hashedPassword,
-        token: generateToken(`${name}-${email}`),
-        permitted: false,
+        token: genToken({ name: name, email: email }),
+        permitted: true,
     })
     res.status(201).json(user)
 }
 
-export { getUsers, createUser }
+async function deleteUser(req: AuthRequest, res: Response) {
+    const user = await User.findOne({ where: { email: req.user!.email } })
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' })
+    }
+
+    await user.destroy()
+
+    res.status(204).send()
+}
+
+export { getUsers, createUser, getUser, deleteUser }

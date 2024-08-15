@@ -7,11 +7,11 @@ class User extends Model {
     public name!: string
     public email!: string
     public password!: string
-    public token!: string
     public permitted!: boolean
-    public Torrents!: Torrent[]
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
+
+    public getTorrents!: () => Promise<Torrent[]>
 }
 
 User.init(

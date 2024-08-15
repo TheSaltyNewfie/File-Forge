@@ -9,7 +9,7 @@ class Torrent extends Model {
     public size!: string
     public seeders!: number
     public leechers!: number
-    public User!: User
+    public userId!: number
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
 }
@@ -40,6 +40,14 @@ Torrent.init(
         leechers: {
             type: new DataTypes.INTEGER(),
             allowNull: false,
+        },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'users',
+                key: 'id',
+            },
         },
     },
     {
