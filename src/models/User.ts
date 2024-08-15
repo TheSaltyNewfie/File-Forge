@@ -33,10 +33,6 @@ User.init(
             type: new DataTypes.STRING(128),
             allowNull: false,
         },
-        token: {
-            type: new DataTypes.STRING(128),
-            allowNull: true,
-        },
         permitted: {
             type: new DataTypes.BOOLEAN(),
             allowNull: false,

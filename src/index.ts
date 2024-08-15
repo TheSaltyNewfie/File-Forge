@@ -20,7 +20,7 @@ app.use(AuthMiddleware)
 app.get('/users', getUsers)
 app.get('/users/:id', getUser)
 app.post('/users/register', createUser)
-app.delete('/users/delete/:id', deleteUser)
+app.delete('/users/delete/', deleteUser)
 
 app.get('/torrents', getTorrents)
 app.post('/torrents/create', createTorrent)
@@ -30,7 +30,7 @@ export { app }
 if (require.main === module) {
     createAssociations()
 
-    sequelize.sync({ force: true }).then(() => {
+    sequelize.sync().then(() => {
         app.listen(3000, () => {
             console.log('Server running on http://localhost:3000')
         })
