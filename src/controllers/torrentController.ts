@@ -8,6 +8,15 @@ async function getTorrents(req: Request, res: Response) {
     res.status(200).json(torrents)
 }
 
+async function getTorrent(req: Request, res: Response) {
+    const { id } = req.params
+    const torrent = await Torrent.findByPk(id)
+    if (!torrent) {
+        return res.status(404).json({ message: 'Torrent not found' })
+    }
+    res.status(200).json(torrent)
+}
+
 async function createTorrent(req: AuthRequest, res: Response) {
     const { title, magnet, size, seeders, leechers } = req.body
 
@@ -28,4 +37,4 @@ async function createTorrent(req: AuthRequest, res: Response) {
     res.status(201).json(torrent)
 }
 
-export { getTorrents, createTorrent }
+export { getTorrents, getTorrent, createTorrent }

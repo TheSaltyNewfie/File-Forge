@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express'
 import cors from 'cors'
 import { sequelize } from './models'
 import { User } from './models/User'
-import { getUsers, createUser, getUser, deleteUser } from './controllers/userController'
-import { getTorrents, createTorrent } from './controllers/torrentController'
+import { getUsers, getUser, getSelf, createUser, updateUser, deleteUser } from './controllers/userController'
+import { getTorrents, getTorrent, createTorrent } from './controllers/torrentController'
 import bodyParser from 'body-parser'
 import { AuthRequest } from './utils/interfaces'
 import { AuthMiddleware } from './middleware/auth'
@@ -22,11 +22,14 @@ app.get('/users', getUsers)
 app.get('/users/:id', getUser)
 app.post('/users/register', createUser)
 app.delete('/users/delete/', deleteUser)
+app.get('/users/me', getSelf)
+app.put('/users/update', updateUser)
 
 app.post('/auth/login', authenticate)
 
 app.get('/torrents', getTorrents)
 app.post('/torrents/create', createTorrent)
+app.get('/torrents/:id', getTorrent)
 
 export { app }
 
