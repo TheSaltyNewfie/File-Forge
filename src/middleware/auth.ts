@@ -14,23 +14,19 @@ export async function AuthMiddleware(req: Request, res: Response, next: NextFunc
         return res.status(401).json({ message: 'Unauthorized' })
     }
 
-    User.findOne({ where: { token: token } })
-        .then((user) => {
-            if (!user) {
-                return res.status(401).json({ message: 'Unauthorized' })
-            }
+    const decoded = verifyToken(token.toString())
 
-            const decoded = verifyToken(token.toString())
+    if (!decoded) {
+        return res.status(401).json({ message: 'Unauthorized' })
+    }
 
-            if (!decoded) {
-                return res.status(401).json({ message: 'Unauthorized' })
-            }
+    const user = await User.findOne({ where: { email: decoded.email } })
 
-            authReq.user = decoded
-            next()
-        })
-        .catch((err) => {
-            console.error(err)
-            res.status(500).json({ message: 'Internal Server Error' })
-        })
+    if (!user) {
+        return res.status(401).json({ message: 'Unauthorized' })
+    }
+
+    authReq.user = decoded
+
+    next()
 }

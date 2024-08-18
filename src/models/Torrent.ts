@@ -6,7 +6,7 @@ class Torrent extends Model {
     public id!: number
     public title!: string
     public magnet!: string
-    public size!: string
+    public size!: number
     public seeders!: number
     public leechers!: number
     public userId!: number
@@ -30,7 +30,7 @@ Torrent.init(
             allowNull: false,
         },
         size: {
-            type: new DataTypes.STRING(128),
+            type: new DataTypes.FLOAT(),
             allowNull: false,
         },
         seeders: {

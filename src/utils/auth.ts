@@ -21,19 +21,18 @@ function genToken(payload: string | object | Buffer): string {
 }
 
 function verifyToken(token: string): any {
-    return jwt.verify(token, JWT_SECRET)
-}
-
-function verifyUser(req: Request, res: Response): any {
-    const token = req.headers['authorization'] || req.headers['Authorization']
-
-    const reqUser = User.findOne({ where: { token: token } })
-
-    if (!reqUser) {
-        return res.status(401).json({ message: 'Unauthorized' })
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] })
+        return decoded
+    } catch (err) {
+        if (err instanceof jwt.JsonWebTokenError) {
+            console.error('JWT Error:', err.message)
+            return null
+        } else {
+            console.error('Unexpected Error:', err)
+            return null
+        }
     }
-
-    return reqUser
 }
 
-export { hashPassword, comparePassword, genToken, verifyUser, verifyToken }
+export { hashPassword, comparePassword, genToken, verifyToken }

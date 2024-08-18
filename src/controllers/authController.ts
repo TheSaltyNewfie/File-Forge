@@ -8,7 +8,7 @@ async function authenticate(req: Request, res: Response) {
     const user = await User.findOne({ where: { email: email } })
 
     if (!user) {
-        return res.status(404).json({ message: 'User not found' })
+        return res.status(401).json({ message: 'User not found' })
     }
 
     if (!user.permitted) {
@@ -20,6 +20,8 @@ async function authenticate(req: Request, res: Response) {
     }
 
     const token = genToken({ name: user.name, email: user.email })
+
+    return res.status(200).json({ token: token })
 }
 
 export { authenticate }

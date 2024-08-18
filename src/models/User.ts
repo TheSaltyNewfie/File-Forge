@@ -8,6 +8,7 @@ class User extends Model {
     public email!: string
     public password!: string
     public permitted!: boolean
+    public role!: string
     public readonly createdAt!: Date
     public readonly updatedAt!: Date
 
@@ -24,10 +25,12 @@ User.init(
         name: {
             type: new DataTypes.STRING(128),
             allowNull: false,
+            unique: true,
         },
         email: {
             type: new DataTypes.STRING(128),
             allowNull: false,
+            unique: true,
         },
         password: {
             type: new DataTypes.STRING(128),
@@ -35,6 +38,10 @@ User.init(
         },
         permitted: {
             type: new DataTypes.BOOLEAN(),
+            allowNull: false,
+        },
+        role: {
+            type: new DataTypes.STRING(128),
             allowNull: false,
         },
     },
